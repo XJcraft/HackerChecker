@@ -1,0 +1,21 @@
+name: HackerChecker
+version: ${project.version}
+main: org.xjcraft.hackerchecker.HackerChecker
+api-version: 1.13
+depend: [SimpleSpigot,XJCraftAudit]
+
+
+
+commands:
+  hack:
+    description: Contains all commands in [HackerChecker],can be shorted as /hc.
+    usage: use /<command> help to show all commands avaliable in plugin
+    permission: hacker.command
+    permission-message: You don't have <permission>
+    aliases:
+      - hc
+
+permissions:
+  hacker.command:
+    description: Allow user to use hacker command
+    default: op
