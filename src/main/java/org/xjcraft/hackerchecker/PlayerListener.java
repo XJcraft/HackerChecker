@@ -44,8 +44,10 @@ public class PlayerListener implements Listener, CommonCommandExecutor {
             return;
         }
         org.jim.bukkit.audit.PlayerMeta playerMeta = ((org.jim.bukkit.audit.AuditPlugin) plugin).getHelper().getPlayerMeta(event.getPlayer());
-        if (playerMeta == null || playerMeta.getStatus() == org.jim.bukkit.audit.Status.APPLIED_VILLAGE_BASE) {
+        if (playerMeta == null || playerMeta.getStatus() != org.jim.bukkit.audit.Status.APPLIED_VILLAGE_BASE) {
             names.add(event.getPlayer().getName());
+        } else if (playerMeta.getStatus() == org.jim.bukkit.audit.Status.APPLIED_VILLAGE_BASE) {
+            LogConfig.config.getLogs().remove(event.getPlayer().getName());
         }
     }
 
@@ -60,7 +62,7 @@ public class PlayerListener implements Listener, CommonCommandExecutor {
         if (minerLog != null) {
             double rate = minerLog.getDiamonds().doubleValue() / minerLog.getTotal();
             if (rate > Config.config.getBanRate()) {
-                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), String.format("ban %s 涉嫌作弊，如有异议请联系op进行复查！", event.getPlayer()));
+                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), String.format("ban %s 涉嫌作弊，如有异议请联系op进行复查！", event.getPlayer().getName()));
             }
             synchronized (this) {
                 if (rate > Config.config.getSuspectRate()) {
