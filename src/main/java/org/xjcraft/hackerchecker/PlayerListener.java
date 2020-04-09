@@ -66,7 +66,7 @@ public class PlayerListener implements Listener, CommonCommandExecutor {
             }
             synchronized (this) {
                 if (rate > Config.config.getSuspectRate()) {
-                    WarningConfig.config.getSuspects().put(event.getPlayer().getName(), (float) rate);
+                    WarningConfig.config.getSuspects().put(event.getPlayer().getName(), rate);
                     plugin.saveConfig(WarningConfig.class);
                 } else {
                     LogConfig.config.getLogs().remove(event.getPlayer().getName());
@@ -92,18 +92,18 @@ public class PlayerListener implements Listener, CommonCommandExecutor {
 
     @RCommand("check")
     public void check(CommandSender player) {
-        Set<Map.Entry<String, Float>> entries = WarningConfig.config.getSuspects().entrySet();
-        ArrayList<Map.Entry<String, Float>> list = new ArrayList<>(entries);
-        list.sort(new Comparator<Map.Entry<String, Float>>() {
+        Set<Map.Entry<String, Double>> entries = WarningConfig.config.getSuspects().entrySet();
+        ArrayList<Map.Entry<String, Double>> list = new ArrayList<>(entries);
+        list.sort(new Comparator<Map.Entry<String, Double>>() {
             @Override
-            public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
-                float v = o1.getValue() - o2.getValue();
+            public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
+                double v = o1.getValue() - o2.getValue();
                 if (v > 0) return 1;
                 if (v < 0) return -1;
                 return 0;
             }
         });
-        for (Map.Entry<String, Float> entry : list) {
+        for (Map.Entry<String, Double> entry : list) {
             player.sendMessage(String.format("玩家%s的钻石概率为%s", entry.getKey(), entry.getValue()));
         }
 
