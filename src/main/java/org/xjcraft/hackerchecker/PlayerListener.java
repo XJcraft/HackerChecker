@@ -18,7 +18,10 @@ import org.xjcraft.hackerchecker.config.Config;
 import org.xjcraft.hackerchecker.config.LogConfig;
 import org.xjcraft.hackerchecker.config.WarningConfig;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class PlayerListener implements Listener, CommonCommandExecutor {
     private HackerChecker plugin;
@@ -46,9 +49,10 @@ public class PlayerListener implements Listener, CommonCommandExecutor {
         org.jim.bukkit.audit.PlayerMeta playerMeta = ((org.jim.bukkit.audit.AuditPlugin) plugin).getHelper().getPlayerMeta(event.getPlayer());
         if (playerMeta == null || playerMeta.getStatus() != org.jim.bukkit.audit.Status.APPLIED_VILLAGE_BASE) {
             names.add(event.getPlayer().getName());
-        } else if (playerMeta.getStatus() == org.jim.bukkit.audit.Status.APPLIED_VILLAGE_BASE) {
-            LogConfig.config.getLogs().remove(event.getPlayer().getName());
         }
+//        else if (playerMeta.getStatus() == org.jim.bukkit.audit.Status.APPLIED_VILLAGE_BASE) {
+//            LogConfig.config.getLogs().remove(event.getPlayer().getName());
+//        }
     }
 
     @EventHandler
@@ -94,17 +98,30 @@ public class PlayerListener implements Listener, CommonCommandExecutor {
     public void check(CommandSender player) {
         Set<Map.Entry<String, Double>> entries = WarningConfig.config.getSuspects().entrySet();
         ArrayList<Map.Entry<String, Double>> list = new ArrayList<>(entries);
-        list.sort(new Comparator<Map.Entry<String, Double>>() {
-            @Override
-            public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
-                double v = o1.getValue() - o2.getValue();
-                if (v > 0) return 1;
-                if (v < 0) return -1;
-                return 0;
-            }
+        list.sort((o1, o2) -> {
+            double v = o1.getValue() - o2.getValue();
+            if (v > 0) return 1;
+            if (v < 0) return -1;
+            return 0;
         });
         for (Map.Entry<String, Double> entry : list) {
             player.sendMessage(String.format("玩家%s的钻石概率为%s", entry.getKey(), entry.getValue()));
+        }
+
+    }
+
+    @RCommand("checkall")
+    public void checkall(CommandSender player) {
+        Set<Map.Entry<String, MinerLog>> entries = LogConfig.config.getLogs().entrySet();
+        ArrayList<Map.Entry<String, MinerLog>> list = new ArrayList<>(entries);
+        list.sort((o1, o2) -> {
+            float v = (o1.getValue().getDiamonds().floatValue() / o1.getValue().getTotal()) - (o2.getValue().getDiamonds().floatValue() / o2.getValue().getTotal().floatValue());
+            if (v > 0) return 1;
+            if (v < 0) return -1;
+            return 0;
+        });
+        for (Map.Entry<String, MinerLog> entry : list) {
+            player.sendMessage(String.format("玩家%s挖掘了%s，挖到了%s钻石，钻石概率为%s", entry.getKey(), entry.getValue().getTotal(), entry.getValue().getDiamonds(), entry.getValue().getDiamonds() / entry.getValue().getTotal().floatValue()));
         }
 
     }
