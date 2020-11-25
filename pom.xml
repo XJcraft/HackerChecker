@@ -68,21 +68,21 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.1-R0.1-SNAPSHOT</version>
+            <version>[1.16.4-R0.1-SNAPSHOT,)</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.xjcraft</groupId>
             <artifactId>SimpleSpigot</artifactId>
-            <version>1.0.1</version>
-            <scope>system</scope>
-            <systemPath>M:/Minecraft/Servers/spigot-sync/plugins/SimpleSpigot-1.0.0-SNAPSHOT.jar</systemPath>
+            <version>LATEST</version>
+            <scope>provided</scope>
+            <!--            <systemPath>M:/Minecraft/Servers/spigot-sync/plugins/SimpleSpigot-1.0.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>org.jim</groupId>
